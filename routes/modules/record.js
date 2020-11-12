@@ -27,8 +27,8 @@ router.post('/create', (req, res) => {
 
 // create edit setting
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Record.findById(id)
+  const _id = req.params.id
+  return Record.findById(_id)
     .lean()
     .then((record) => res.render('edit', { record }))
     .catch(error => console.log(error))
@@ -40,7 +40,6 @@ router.put('/:id', (req, res) => {
   Record.find({ categoryName: req.body.category })
     .then(record => { req.body.icon = record[0].icon })
   return Record.findById(_id)
-    .lean()
     .then(record => {
       record = Object.assign(record, req.body)
       return record.save()
