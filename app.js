@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 
 const Record = require('./models/record')
+const routes = require('./routes')
 const port = 3000
 
 const app = express()
@@ -30,45 +31,8 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('mongodb connected!')
 })
-
+app.use(routes)
 // home routes setting
-app.get('/', (req, res) => {
-  Record.find({ name: { $regex: '' } })
-    .lean()
-    .then(record => {
-      let totalAmount = 0
-      const promise = []
-      for (let i = 0; i < record.length; i++) {
-        promise.push(record[i])
-        totalAmount += Number(promise[i].amount)
-      }
-      res.render('index', { record, totalAmount })
-    })
-    .catch(error => console.log(error))
-})
-
-// creat route setting
-app.get('/record/new', (req, res) => {
-  res.render('new')
-})
-
-app.post('/record/create', (req, res) => {
-  const body = req.body
-  Record.find()
-    .lean()
-    .then(record => {
-      const promise = []
-      for (let i = 0; i < record.length; i++) {
-        promise.push(record[i])
-        if (body.category === '支出類別') { body.category = '其他' }
-        if (body.merchant === '') { body.merchant = '其他' }
-        if (body.category === promise[i].categoryName) { body.icon = promise[i].icon }
-      }
-      return Record.create(body)
-    })
-    .then(() => res.redirect('/'))
-    .catch(() => console.log('error!'))
-})
 
 // start and listen on the Express server
 app.listen(port, () => {
