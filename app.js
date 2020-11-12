@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
+
+const Record = require('./models/record')
 const port = 3000
 
 const app = express()
@@ -31,7 +33,18 @@ db.once('open', () => {
 
 // routes setting
 app.get('/', (req, res) => {
-  res.render('index')
+  Record.find({ name: { $regex: '' } })
+    .lean()
+    .then(record => {
+      let totalAmount = 0
+      const promise = []
+      for (let i = 0; i < record.length; i++) {
+        promise.push(record[i])
+        totalAmount += Number(promise[i].amount)
+      }
+      res.render('index', { record, totalAmount })
+    })
+    .catch(error => console.log(error))
 })
 
 // start and listen on the Express server

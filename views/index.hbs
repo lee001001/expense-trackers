@@ -1,1 +1,33 @@
-<h3>Hello</h3>
+<div class="d-flex justify-content-center align-items-cente">
+  <span class="mr-3">總金額：</span>
+  <h1 class="text-center total-amount" style="color:lightblue">{{totalAmount}}
+  </h1>
+</div>
+
+<a class="btn btn-outline-success" href="/record/new">新增支出</a>
+
+<ul class="list-group list-group-flush">
+  {{#each record}}
+  <li class="list-group-item">
+    <div class="row">
+      <div class="row col-10 mr-auto ">
+        <span class="col-1 align-items-center" style="font-size: 16px">{{{this.icon}}}</span>
+        <div class="col-11 d-flex ml-0 align-items-center justify-content-between ">
+          <h3>{{this.name}}</h3>
+          <h3>{{this.amount}}</h3>
+        </div>
+        <br>
+        <span class="col-1"></span>
+        <span class="col-3">{{this.date}}</span>
+      </div>
+      <div class="col-auto mr-auto">
+        <a class="btn btn-success" href="/records/{{ this._id }}/edit">修改</a>
+        <form action="./record/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;"
+          onsubmit="return confirm('確定要刪除嗎？')">
+          <button class="btn btn-danger" type="submit">刪除</button>
+        </form>
+      </div>
+    </div>
+  </li>
+  {{/each}}
+</ul>
