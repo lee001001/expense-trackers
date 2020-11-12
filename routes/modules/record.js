@@ -40,14 +40,22 @@ router.put('/:id', (req, res) => {
   Record.find({ categoryName: req.body.category })
     .then(record => { req.body.icon = record[0].icon })
   return Record.findById(_id)
+    .lean()
     .then(record => {
       record = Object.assign(record, req.body)
       return record.save()
     })
     .then(() => res.redirect('/'))
-    .catch(error => console.log('error'))
+    .catch(() => console.log('error!'))
 })
 
 // create delete rounte
+router.delete('/:id', (req, res) => {
+  const _id = req.params.id
+  return Record.findById(_id)
+    .then(record => record.remove())
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
 
 module.exports = router

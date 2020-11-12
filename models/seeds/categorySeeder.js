@@ -1,7 +1,6 @@
-const mongoose = require('mongoose')
 const Record = require('../record')
-mongoose.connect('mongodb://localhost/expense-tracker', { useNewUrlParser: true, useUnifiedTopology: true })
-const db = mongoose.connection
+const db = require('../../config/mongoose')
+
 // 寫入 category 和 icon
 db.once('open', () => {
   console.log('Mongoodb  category connected ')
