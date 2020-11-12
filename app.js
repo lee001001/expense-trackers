@@ -31,7 +31,7 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 
-// routes setting
+// home routes setting
 app.get('/', (req, res) => {
   Record.find({ name: { $regex: '' } })
     .lean()
@@ -45,6 +45,29 @@ app.get('/', (req, res) => {
       res.render('index', { record, totalAmount })
     })
     .catch(error => console.log(error))
+})
+
+// creat route setting
+app.get('/record/new', (req, res) => {
+  res.render('new')
+})
+
+app.post('/record/create', (req, res) => {
+  const body = req.body
+  Record.find()
+    .lean()
+    .then(record => {
+      const promise = []
+      for (let i = 0; i < record.length; i++) {
+        promise.push(record[i])
+        if (body.category === '支出類別') { body.category = '其他' }
+        if (body.merchant === '') { body.merchant = '其他' }
+        if (body.category === promise[i].categoryName) { body.icon = promise[i].icon }
+      }
+      return Record.create(body)
+    })
+    .then(() => res.redirect('/'))
+    .catch(() => console.log('error!'))
 })
 
 // start and listen on the Express server
