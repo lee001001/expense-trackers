@@ -50,10 +50,29 @@ router.put('/:id', (req, res) => {
 
 // create delete rounte
 router.delete('/:id', (req, res) => {
-  const _id = req.params.id
+  const _id = req.params.ids
   return Record.findById(_id)
     .then(record => record.remove())
     .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
+
+// 篩選資料
+router.get('/category', (req, res) => {
+  const filter = req.query.filter
+  if (filter.length === 0) return res.redirect('/')
+  console.log(req.query)
+  Record.find({ category: `${req.query.filter}` })
+    .lean()
+    .then(record => {
+      let totalAmount = 0
+      const promise = []
+      for (let i = 0; i < record.length; i++) {
+        promise.push(record[i])
+        totalAmount += Number(promise[i].amount)
+      }
+      res.render('index', { record, totalAmount, filter })
+    })
     .catch(error => console.log(error))
 })
 
