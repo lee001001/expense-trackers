@@ -14,8 +14,14 @@
   <header>
     <!-- As a link -->
     <nav class="navbar navbar-dark bg-secondary justify-content-between">
-      <a class="navbar-brand" href="/">廣治的私房錢</a>
-      <a class="btn btn-outline-light" href="/users/login">Login</a>
+      <a class="navbar-brand" href="/">{{#if isAuthenticated}}{{ user.name}}'s
+        私房錢
+        {{/if}}</a>
+      {{#if isAuthenticated}}
+      <a href="/users/logout" class="btn btn-outline-light">Logout</a>
+      {{else}}
+      <a href="/users/login" class="btn btn-outline-light">Login</a>
+      {{/if}}
     </nav>
   </header>
   {{{body}}}
