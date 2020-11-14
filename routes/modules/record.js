@@ -9,6 +9,7 @@ router.get('/new', (req, res) => {
 
 router.post('/create', (req, res) => {
   const body = req.body
+  body.userId = req.user._id
   Record.find()
     .lean()
     .then(record => {
@@ -27,19 +28,21 @@ router.post('/create', (req, res) => {
 
 // create edit setting
 router.get('/:id/edit', (req, res) => {
+  const userId = req.user._id
   const _id = req.params.id
-  return Record.findById(_id)
+  return Record.findOne({ _id, userId })
     .lean()
     .then((record) => res.render('edit', { record }))
     .catch(error => console.log(error))
 })
 
 router.put('/:id', (req, res) => {
+  const userId = req.user._id
   const _id = req.params.id
   req.body.amount = Number(req.body.amount)
   Record.find({ categoryName: req.body.category })
     .then(record => { req.body.icon = record[0].icon })
-  return Record.findById(_id)
+  return Record.findOne({ _id, userId })
     .then(record => {
       record = Object.assign(record, req.body)
       return record.save()
@@ -50,8 +53,9 @@ router.put('/:id', (req, res) => {
 
 // create delete rounte
 router.delete('/:id', (req, res) => {
-  const _id = req.params.ids
-  return Record.findById(_id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Record.findOne({ _id, userId })
     .then(record => record.remove())
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
