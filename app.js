@@ -1,6 +1,7 @@
 // require packages used in the project
 const express = require('express')
 const session = require('express-session')
+const usePassport = require('./config/passport')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
@@ -26,6 +27,7 @@ app.use(methodOverride('_method'))
 
 app.use(express.static('public'))
 
+usePassport(app)
 app.use(routes)
 // home routes setting
 
