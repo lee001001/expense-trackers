@@ -57,7 +57,7 @@ router.delete('/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
-// 篩選資料
+// 篩選類別資料
 router.get('/category', (req, res) => {
   const filter = req.query.filter
   if (filter.length === 0) return res.redirect('/')
