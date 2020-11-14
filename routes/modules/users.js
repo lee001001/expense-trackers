@@ -43,4 +43,10 @@ router.post('/register', (req, res) => {
   })
 })
 
+// 新增登出路由
+router.get('/logout', (req, res) => {
+  req.logout()
+  res.redirect('/users/login')
+})
+
 module.exports = router
