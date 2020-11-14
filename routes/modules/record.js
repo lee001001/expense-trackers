@@ -32,7 +32,10 @@ router.get('/:id/edit', (req, res) => {
   const _id = req.params.id
   return Record.findOne({ _id, userId })
     .lean()
-    .then((record) => res.render('edit', { record }))
+    .then(record => {
+      record.date = record.date.toISOString().slice(0, 10)
+      res.render('edit', { record })
+    })
     .catch(error => console.log(error))
 })
 
@@ -62,20 +65,27 @@ router.delete('/:id', (req, res) => {
 })
 
 // 篩選類別資料
-router.get('/category', (req, res) => {
+router.get('/', (req, res) => {
+  const userId = req.user._id
   const filter = req.query.filter
-  if (filter.length === 0) return res.redirect('/')
+  const { startDate, endDate } = req.query
+  if (filter.length === 0 || startDate.length === 0) return res.redirect('/')
   console.log(req.query)
-  Record.find({ category: `${req.query.filter}` })
+  Record.find({
+    userId,
+    category: `${req.query.filter}`,
+    date: { $gte: startDate, $lte: endDate }
+  })
     .lean()
     .then(record => {
       let totalAmount = 0
       const promise = []
       for (let i = 0; i < record.length; i++) {
+        record[i].date = record[i].date.toISOString().slice(0, 10)
         promise.push(record[i])
         totalAmount += Number(promise[i].amount)
       }
-      res.render('index', { record, totalAmount, filter })
+      res.render('index', { record, totalAmount, filter, startDate, endDate })
     })
     .catch(error => console.log(error))
 })

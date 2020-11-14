@@ -4,7 +4,14 @@ const Record = require('../../models/record')
 
 router.get('/', (req, res) => {
   const userId = req.user._id
-  Record.find({ name: { $regex: '' }, userId })
+  // Set default date range
+  const date = new Date()
+  date.setDate(1)
+  const startDate = date.toISOString().slice(0, 10)
+  date.setDate(30)
+  const endDate = date.toISOString().slice(0, 10)
+
+  Record.find({ name: { $regex: '' }, userId, date: { $gte: startDate, $lte: endDate } })
     .lean()
     .then(record => {
       let totalAmount = 0
@@ -13,7 +20,8 @@ router.get('/', (req, res) => {
         promise.push(record[i])
         totalAmount += Number(promise[i].amount)
       }
-      res.render('index', { record, totalAmount })
+      console.log(req.query)
+      res.render('index', { record, totalAmount, startDate, endDate })
     })
     .catch(error => console.log(error))
 })
