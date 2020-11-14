@@ -21,6 +21,9 @@ const recordSchema = new Schema({
   },
   icon: {
     type: String
+  },
+  merchant: {
+    type: String
   }
 })
 
