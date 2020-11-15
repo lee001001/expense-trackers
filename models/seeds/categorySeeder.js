@@ -1,12 +1,15 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 const Record = require('../record')
 const db = require('../../config/mongoose')
 
 // 寫入 category 和 icon
 db.once('open', () => {
-  console.log('Mongoodb  category connected ')
-  const createRecordPromise = []
+  console.log('MongoDB connected category!')
+  const promise = []
 
-  createRecordPromise.push(
+  promise.push(
     Record.create(
       {
         categoryName: '家居物業',
@@ -30,9 +33,7 @@ db.once('open', () => {
       }
     )
   )
-
-  // 等 recordSeeder 同步建立
-  Promise.all(createRecordPromise).then(() => {
+  Promise.all(promise).then(() => {
     db.close()
   })
 })

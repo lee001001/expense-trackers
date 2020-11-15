@@ -1,59 +1,75 @@
-
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+const User = require('../user')
 const Record = require('../record')
 const db = require('../../config/mongoose')
+const bcrypt = require('bcryptjs')
+
+const SEED_USER = {
+  username: '廣志',
+  email: 'user@root.com',
+  password: '1234'
+}
+
 db.once('open', () => {
-  console.log('Mongoodb  category connected ')
-  const promise = []
+  console.log('MongoDB connected recordSeeder!')
+  const createUserPromises = []
 
-  promise.push(
-    Record.create(
-      {
-        name: '火鍋',
-        category: '餐飲食品',
-        date: '2019-04-23',
-        amount: '638',
-        icon: '<i class="fas fa-utensils"></i>'
-      },
-      {
-        name: '房租',
-        category: '家居物業',
-        date: '2019-04-23',
-        amount: '3000',
-        icon: '<i class="fas fa-home"></i>'
-      },
-      {
-        name: '機票',
-        category: '交通出行',
-        date: '2020-04-13',
-        amount: '14000',
-        icon: '<i class="fas fa-shuttle-van"></i>'
-      },
-      {
-        name: '電子遊藝場',
-        category: '休閒娛樂',
-        date: '2009-02-16',
-        amount: '1200',
-        icon: '<i class="fas fa-grin-beam"></i>'
-      },
-      {
-        name: '賞鳥',
-        category: '其他',
-        date: '2019-04-23',
-        amount: '700',
-        icon: '<i class="fas fa-grin-beam"></i>'
-      },
-      {
-        name: '買菸',
-        category: '休閒娛樂',
-        date: '2019-04-23',
-        amount: '780',
-        icon: '<i class="fas fa-grin-beam"></i>'
-      }
-    )
+  const { username, email } = SEED_USER
+  createUserPromises.push(
+    User.find({ email: SEED_USER.email })
+      .then(user => {
+        if (user.length !== 0) {
+          return
+        }
+        return bcrypt
+          .genSalt(10)
+          .then(salt => bcrypt.hash(SEED_USER.password, salt))
+          .then(hash => {
+            return User.create({ username, email, password: hash })
+          })
+      })
   )
-
-  // 等 recordSeeder 同步建立
-  Promise.all(promise).then(() => {
-    db.close()
+  Promise.all(createUserPromises).then(() => {
+    const createRecordPromise = []
+    createRecordPromise.push(
+      User.findOne({ email })
+        .then(user => {
+          const userId = user._id
+          return Record.create(
+            {
+              name: '早餐',
+              category: '餐飲食品',
+              date: Date.now(),
+              amount: 120,
+              merchant: '全家便利商店',
+              icon: '<i class="fas fa-utensils"></i>',
+              userId
+            },
+            {
+              name: '午餐',
+              category: '餐飲食品',
+              date: Date.now(),
+              amount: 300,
+              merchant: '麥當勞',
+              icon: '<i class="fas fa-utensils"></i>',
+              userId
+            },
+            {
+              name: '電影',
+              category: '休閒娛樂',
+              date: Date.now(),
+              amount: 250,
+              merchant: '威尼斯影城',
+              icon: '<i class="fas fa-grin-beam"></i>',
+              userId
+            }
+          )
+        })
+    )
+    Promise.all(createRecordPromise).then(item => {
+      process.exit()
+    })
   })
 })
