@@ -77,27 +77,45 @@ router.delete('/:id', (req, res) => {
 // 篩選類別資料
 router.get('/', (req, res) => {
   const userId = req.user._id
-  const filter = req.query.filter
+  const filter = req.query.filteredCategory
   const { startDate, endDate } = req.query
-  if (filter.length === 0 || startDate.length === 0) return res.redirect('/')
-  console.log(req.query)
-  Record.find({
-    userId,
-    category: `${req.query.filter}`,
-    date: { $gte: startDate, $lte: endDate }
-  })
-    .lean()
-    .then(record => {
-      let totalAmount = 0
-      const promise = []
-      for (let i = 0; i < record.length; i++) {
-        record[i].date = record[i].date.toISOString().slice(0, 10)
-        promise.push(record[i])
-        totalAmount += Number(promise[i].amount)
-      }
-      res.render('index', { record, totalAmount, filter, startDate, endDate })
-    })
-    .catch(error => console.log(error))
-})
 
+  Category.find()
+    .lean()
+    .sort({ _id: 'asc' })
+    .then(categoryList => {
+      // checked select options
+      const checkedCategories = []
+      const otherCategories = []
+      categoryList.forEach(category => {
+        if (filter.includes(category.name)) {
+          checkedCategories.push(category)
+        } else {
+          otherCategories.push(category)
+        }
+      })
+
+      if (filter.length === 0 || startDate.length === 0) return res.redirect('/')
+
+      console.log(req.query)
+      Record.find({
+        userId,
+        category: checkedCategories.map(category => category._id),
+        date: { $gte: startDate, $lte: endDate }
+      })
+        .populate('category')
+        .lean()
+        .then(record => {
+          let totalAmount = 0
+          const promise = []
+          for (let i = 0; i < record.length; i++) {
+            record[i].date = record[i].date.toISOString().slice(0, 10)
+            promise.push(record[i])
+            totalAmount += Number(promise[i].amount)
+          }
+          res.render('index', { record, totalAmount, filter, startDate, endDate })
+        })
+        .catch(error => console.log(error))
+    })
+})
 module.exports = router

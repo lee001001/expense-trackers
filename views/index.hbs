@@ -19,7 +19,7 @@
         </div>
         <div class="col-4">
           <div class="filter-category mb-4">
-            <select class="form-control" id="filter-category" name="category">
+            <select class="form-control" id="filter-category" name="filteredCategory">
               <option>類別</option>
               {{#each categoryList}}
               <option value="{{this.name}}" {{#if_equal this.name ../cateOption}}selected{{/if_equal}}>{{this.name}}
