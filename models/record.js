@@ -19,12 +19,6 @@ const recordSchema = new Schema({
   totalAmount: {
     type: String
   },
-  categoryName: {
-    type: String
-  },
-  icon: {
-    type: String
-  },
   merchant: {
     type: String
   },

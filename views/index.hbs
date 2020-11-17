@@ -19,14 +19,12 @@
         </div>
         <div class="col-4">
           <div class="filter-category mb-4">
-            <select class="form-control" id="filter-category" name="filter">
+            <select class="form-control" id="filter-category" name="category">
               <option>類別</option>
-              <option value="餐飲食品">餐飲食品</option>
-              <option value="休閒娛樂">休閒娛樂</option>
-              <option value="家居物業">家居物業</option>
-              <option value="交通出行">交通出行</option>
-              <option value="其他">其他</option>
-              <option value="">全部支出</option>
+              {{#each categoryList}}
+              <option value="{{this.name}}" {{#if_equal this.name ../cateOption}}selected{{/if_equal}}>{{this.name}}
+              </option>
+              {{/each}}
             </select>
           </div>
         </div>
@@ -44,10 +42,10 @@
     <li class="list-group-item">
       <div class="row">
         <div class="row col-10 mr-auto ">
-          <span class="col-1 align-items-center" style="font-size: 16px">{{{this.icon}}}</span>
+          <span class="col-1 align-items-center" style="font-size: 16px">{{{ this.category.icon }}}</span>
           <div class="col-11 d-flex ml-0 align-items-center justify-content-between ">
             <h3>{{this.name}}</h3>
-            <h3>{{this.amount}}</h3>
+            <h3>${{this.amount}}</h3>
           </div>
           <br>
           <span class="col-1"></span>
@@ -62,6 +60,7 @@
         </div>
       </div>
     </li>
+
     {{/each}}
   </ul>
   <div class="text-center mt-3">

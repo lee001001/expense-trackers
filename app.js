@@ -17,7 +17,7 @@ const PORT = process.env.PORT
 
 const app = express()
 
-app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs', helpers: require('./utils/helpers') }))
 app.set('view engine', 'hbs')
 
 app.use(session({

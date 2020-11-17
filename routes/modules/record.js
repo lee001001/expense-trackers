@@ -1,29 +1,34 @@
 const express = require('express')
 const router = express.Router()
 const Record = require('../../models/record')
+const Category = require('../../models/category')
 
 // creat route setting
 router.get('/new', (req, res) => {
-  res.render('new')
+  Category.find()
+    .lean()
+    .sort({ _id: 'asc' })
+    .then(categoryList =>
+      res.render('new', { categoryList })
+    )
 })
 
 router.post('/create', (req, res) => {
-  const body = req.body
-  body.userId = req.user._id
-  Record.find()
-    .lean()
-    .then(record => {
-      const promise = []
-      for (let i = 0; i < record.length; i++) {
-        promise.push(record[i])
-        if (body.category === '支出類別') { body.category = '其他' }
-        if (body.merchant === '') { body.merchant = '其他' }
-        if (body.category === promise[i].categoryName) { body.icon = promise[i].icon }
-      }
-      return Record.create(body)
+  const record = req.body
+  console.log(record.category)
+  Category.findById(record.category)
+    .then(categoryList => {
+      record.category = categoryList._id
+      record.userId = req.user._id
+      console.log('categoryList', record.category)
+      Record.create(record)
+        .then(record => {
+          req.flash('success_msg', `[${record.name}] created successfully!`)
+          res.redirect('/')
+        })
+        .catch(error => console.error(error))
     })
-    .then(() => res.redirect('/'))
-    .catch(() => console.log('error!'))
+    .catch(error => console.error(error))
 })
 
 // create edit setting
@@ -31,9 +36,14 @@ router.get('/:id/edit', (req, res) => {
   const userId = req.user._id
   const _id = req.params.id
   return Record.findOne({ _id, userId })
+    .populate('category')
     .lean()
     .then(record => {
       record.date = record.date.toISOString().slice(0, 10)
+      Category.find({ _id: { $ne: record.category._id } })
+        .lean()
+        .sort({ _id: 'asc' })
+        .then()
       res.render('edit', { record })
     })
     .catch(error => console.log(error))

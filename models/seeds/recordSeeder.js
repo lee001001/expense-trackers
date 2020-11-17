@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const User = require('../user')
 const Record = require('../record')
+const Category = require('../category')
 const db = require('../../config/mongoose')
 const bcrypt = require('bcryptjs')
 
