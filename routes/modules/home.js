@@ -5,7 +5,6 @@ const Record = require('../../models/record')
 router.get('/', (req, res) => {
   const userId = req.user._id
   const username = req.user.username
-  const categories = ['餐飲食品', '休閒娛樂', '家居物業', '交通出行', '其他']
   // Set default date range
   const date = new Date()
   date.setDate(1)

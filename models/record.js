@@ -5,7 +5,9 @@ const recordSchema = new Schema({
     type: String
   },
   category: {
-    type: String
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Category'
   },
   date: {
     type: Date,
