@@ -31,7 +31,7 @@ $ mkdir expense-tracker
 2. 下載專案
 
 ```
-$ git clone https://github.com/robert913152750/Money-manger.git
+$ git clone https://github.com/lee001001/expense-trackers.git
 $ cd expense-tracker
 ```
 
