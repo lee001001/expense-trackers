@@ -1,0 +1,61 @@
+{
+  "categoryList": [
+    {
+      "name": "家居物業",
+      "icon": "<i class=\"fas fa-home fa-lg\"></i>"
+    },
+    {
+      "name": "交通出行",
+      "icon": "<i class=\"fas fa-shuttle-van fa-lg\"></i>"
+    },
+    {
+      "name": "休閒娛樂",
+      "icon": "<i class=\"fas fa-grin-beam fa-lg\"></i>"
+    },
+    {
+      "name": "餐飲食品",
+      "icon": "<i class=\"fas fa-utensils fa-lg\"></i>"
+    },
+    {
+      "name": "其他",
+      "icon": "<i class=\"fas fa-pen fa-lg\"></i>"
+    }
+  ],
+  "records": [
+    {
+      "name": "午餐",
+      "category": "餐飲食品",
+      "date": "2020/11/23",
+      "amount": 60,
+      "merchant": "7-11"
+    },
+    {
+      "name": "晚餐",
+      "category": "餐飲食品",
+      "date": "2020/11/23",
+      "amount": 60,
+      "merchant": "7-11"
+    },
+    {
+      "name": "捷運",
+      "category": "交通出行",
+      "date": "2020/11/23",
+      "amount": 120,
+      "merchant": "7-11"
+    },
+    {
+      "name": "電影: 驚奇隊長",
+      "category": "休閒娛樂",
+      "date": "2020/11/23",
+      "amount": 220,
+      "merchant": "7-11"
+    },
+    {
+      "name": "租金",
+      "category": "家居物業",
+      "date": "2020/11/23",
+      "amount": 25000,
+      "merchant": "7-11"
+    }
+  ]
+}
